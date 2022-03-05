@@ -607,7 +607,6 @@ $(function () {
                         return;
                     } else {
                         if (confirm("确定删除文件夹" + currentPath + "吗？")) {
-
                             var form = new FormData();
                             form.append("files", [currentPath]);
                             form.append("_token", Dcat.token);
@@ -634,35 +633,37 @@ $(function () {
                             return;
                         }
                     }
-                }
-                let files = []
-                if (confirm("确定删除?")) {
-                    selected_items.each(function (index, item) {
-                        files.push($(item).data("url"))
-                    })
+                }else{
+                    let files = []
+                    if (confirm("确定删除?")) {
+                        selected_items.each(function (index, item) {
+                            files.push($(item).data("url"))
+                        })
 
-                    var form = new FormData();
-                    form.append("files", files);
-                    form.append("_token", Dcat.token);
-                    $.ajax({
-                        type: 'post',
-                        url: options.delete_url,
-                        data: form,
-                        processData: false,
-                        contentType: false,
-                        success: function (data) {
-                            if (data['code'] == 200) {
-                                toastr.success(data['msg']);
-                                thiz.getdata(name, currentPath, options)
-                            } else {
-                                toastr.error(data['msg']);
+                        var form = new FormData();
+                        form.append("files", files);
+                        form.append("_token", Dcat.token);
+                        $.ajax({
+                            type: 'post',
+                            url: options.delete_url,
+                            data: form,
+                            processData: false,
+                            contentType: false,
+                            success: function (data) {
+                                if (data['code'] == 200) {
+                                    toastr.success(data['msg']);
+                                    thiz.getdata(name, currentPath, options)
+                                } else {
+                                    toastr.error(data['msg']);
+                                }
+                            },
+                            error: function (XmlHttpRequest, textStatus, errorThrown) {
+                                toastr.error(thiz.lang("删除失败"));
                             }
-                        },
-                        error: function (XmlHttpRequest, textStatus, errorThrown) {
-                            toastr.error(thiz.lang("删除失败"));
-                        }
-                    });
+                        });
+                    }
                 }
+
 
             });
             // 图片/视频预览
